@@ -26,7 +26,7 @@ unsigned int DronesManager::get_size() const {
 }
 
 bool DronesManager::empty() const {
-	return false;
+	return first == NULL;
 }
 
 DronesManager::DroneRecord DronesManager::select(unsigned int index) const {
