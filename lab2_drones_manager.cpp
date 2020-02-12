@@ -6,6 +6,14 @@ DronesManager::DronesManager() {
 }
 
 DronesManager::~DronesManager() {
+	delete []first->prev;
+	first->prev = NULL;
+	delete []first->next;
+	first->next = NULL;
+	delete first;
+	first = NULL;
+	delete last;
+	last = NULL;
 }
 
 bool operator==(const DronesManager::DroneRecord& lhs, const DronesManager::DroneRecord& rhs) {
@@ -29,6 +37,14 @@ unsigned int DronesManager::search(DroneRecord value) const {
 }
 
 void DronesManager::print() const {
+	DroneRecord* temp = first;
+	while (temp->next != NULL) {
+		cout << temp->droneID << "  " << temp->range
+			<< "  " << temp->yearBought << "  " << temp->droneType
+			<< "  " << temp->manufacturer << "  " << temp->description
+			<< "  " << temp->batteryType << endl;
+		temp = temp->next;
+	}
 }
 
 bool DronesManager::insert(DroneRecord value, unsigned int index) {
@@ -40,7 +56,17 @@ bool DronesManager::insert_front(DroneRecord value) {
 }
 
 bool DronesManager::insert_back(DroneRecord value) {
-	return false;
+	DroneRecord* val = new DroneRecord(value);
+	if (last == NULL)
+		first = val;
+	else {
+		val->prev = last;
+		last->next = val;
+	}
+	val->next = NULL;
+	last = val;
+	size++;
+	return true;
 }
 
 bool DronesManager::remove(unsigned int index) {
@@ -52,7 +78,14 @@ bool DronesManager::remove_front() {
 }
 
 bool DronesManager::remove_back() {
-	return false;
+	if (last == NULL)
+		return false;
+	DroneRecord* temp = last;
+	last = last->prev;
+	last->next = NULL;
+	delete temp;
+	temp = NULL;
+	return true;
 }
 
 bool DronesManager::replace(unsigned int index, DroneRecord value) {
